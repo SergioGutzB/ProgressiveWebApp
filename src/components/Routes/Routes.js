@@ -14,7 +14,6 @@ const Routes = () => (
     <Route path='/about' component={About} />
     <Route path='/post/:slug' component={props => {
       const post = posts.posts.filter(post => props.match.params.slug === post.slug)
-      console.log(props)
       return <PostDetail post={post[0]} />
     }} />
     <Route component={NotFound} />
