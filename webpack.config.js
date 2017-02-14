@@ -10,6 +10,9 @@ module.exports = {
   output: {
     filename: 'bundle.js',
   },
+  devServer: {
+    historyApiFallback: true
+  },
   module: {
     rules: [{
       enforce: 'pre',
@@ -22,8 +25,18 @@ module.exports = {
       exclude: /node_modules/
     },{
       test: /\.css$/,
-      //loader: 'style-loader|css-loader?modules,localIdentName=[hash:base64:6]-[name]-[local]',
-      use: ExtractTextPlugin.extract(['css-loader?modules,localIdentName="[name]-[local]-[hash:base64:6]",camelCase'])
+      use: ExtractTextPlugin.extract({
+        fallback: 'style-loader',
+        use: {
+          loader: 'css-loader',
+          options: {
+            sourceMap: true,
+            modules: true,
+            importLoaders: true,
+            localIdentName: '[name]__[local]__[hash:base64:6]'
+          }
+        }
+      })
     }]
   },
   plugins: [
@@ -31,6 +44,6 @@ module.exports = {
       template: `${srcDir}/index.html`
     }),
     new DashboardPlugin(),
-    new ExtractTextPlugin('styles.css')
+    new ExtractTextPlugin('styles.[chunkhash:6].css')
   ]
 }
